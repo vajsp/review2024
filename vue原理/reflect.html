@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body></body>
+</html>
+<script>
+    const p1 = {
+        lastName: '张',
+        firstName: '三',
+        get fullName() {
+            console.log('触发了方法');
+            return this.lastName + this.firstName;
+        },
+    };
+    const p2 = {
+        lastName: '李',
+        firstName: '四',
+        get fullName() {
+            console.log('触发了方法');
+            return this.lastName + this.firstName;
+        },
+    };
+
+    console.log(p1.fullName);
+    console.log(Reflect.get(p1, 'fullName'));
+    console.log(Reflect.get(p1, 'fullName', p2));
+</script>
