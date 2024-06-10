@@ -14,3 +14,6 @@
 //  age?: number
 //  color?: string
 // }
+
+// type Optional<T extends object, K extends keyof T> = Pick<T, K> &
+//     Partial<Omit<T, K>>;
