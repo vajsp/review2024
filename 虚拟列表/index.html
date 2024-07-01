@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            .viewport {
+                width: 300px;
+                height: 400px;
+                background-color: greenyellow;
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                overflow-y: scroll;
+            }
+            .scrollbar {
+                height: 3000px;
+            }
+            .list {
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+
+            .row {
+                height: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <!-- 用户视口，超出部分滚动 -->
+            <div class="viewport" ref="viewport">
+                <!-- 子元素超出父元素高度 -->
+                <div class="scrollbar" ref="scrollbar"></div>
+                <div class="list">
+                    <div class="row" v-for="(item,i) in showList">
+                        {{item.n}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="../node_modules/vue/dist/vue.min.js"></script>
+        <script>
+            // 创造海量数据
+            const bigList = new Array(3200).fill(null).map((ele, i) => {
+                return { n: i + 1 };
+            });
+            console.log(bigList);
+
+            new Vue({
+                mounted() {
+                    this.$ref.viewport.style.height =
+                        this.rowHeight * this.viewCount + 'px';
+                    console.log(this.$ref.viewport.style.height);
+
+                    this.$ref.scrollbar.style.height =
+                        this.rowHeight * this.list.length + 'px';
+                },
+                computed: {
+                    showList() {
+                        return this.list.slice(this.start, this.end);
+                    },
+                },
+                el: '#app',
+                data() {
+                    return {
+                        start: 0,
+                        end: 20,
+                        // 模拟外部属性
+                        list: Object.freeze(bigList),
+                        viewCount: 30, //显示多少数据
+                        rowHeight: 20, // 行高
+                    };
+                },
+            });
+        </script>
+    </body>
+</html>

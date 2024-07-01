@@ -18,26 +18,26 @@ const root = {
     ],
 };
 
-// // 深度优先(递归)
-// function dfs(root) {
-//     console.log(root.val);
-//     root.children.forEach((item) => {
-//         dfs(item);
-//     });
-// }
+/** 深度优先 递归 */
+function dfs(data) {
+    console.log(data.val);
+    data.children.forEach((item) => {
+        dfs(item);
+    });
+}
 
-// dfs(root);
-// 广度优先(入栈出栈)
-function bfs(root) {
-    const arr = [root];
+// console.log(dfs(root));
+
+function bfs(data) {
+    const arr = [data];
 
     while (arr.length > 0) {
-        console.log(arr[0].val);
-        const o = arr.shift();
-        o.children.forEach((element) => {
-            arr.push(element);
+        const a = arr.shift();
+        console.log(a.val);
+        a.children.forEach((item) => {
+            arr.push(item);
         });
     }
 }
 
-bfs(root);
+console.log(bfs(root));
