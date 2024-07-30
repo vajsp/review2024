@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body></body>
+</html>
+<script>
+    const p1 = {
+        lastName: '张',
+        firstName: '三',
+        get fullName() {
+            console.log('触发了方法');
+            console.log(this);
+            return this.lastName + this.firstName;
+        },
+    };
+
+    const proxy = new Proxy(p1, {
+        get(target, key, receiver) {
+            console.log(target, key, receiver);
+            console.log('getter 行为触发');
+            // return target[key];
+            // 改变shi指向，触发三次p1的方法
+            return Reflect.get(target, key, receiver);
+        },
+    });
+
+    console.log(proxy.fullName);
+</script>

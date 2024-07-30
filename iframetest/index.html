@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            html,
+            body {
+                height: 100%;
+                background: pink;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <span>safdas</span>
+            <input name="" id="" />
+        </div>
+        <div>
+            <iframe
+                src="http://127.0.0.1:5500/iframetest/index2.html"
+                frameborder="0"
+            ></iframe>
+        </div>
+        <div>
+            <iframe
+                src="http://127.0.0.1:5500/iframetest/index3.html"
+                frameborder="0"
+            ></iframe>
+        </div>
+    </body>
+    <script>
+        console.log(12312);
+        var box = document.querySelector('body');
+        console.log(box);
+        box.addEventListener('touchstart', function (e) {
+            console.log('touchstart');
+        });
+        box.addEventListener('touchmove', function (e) {
+            console.log('touchmove');
+        });
+    </script>
+</html>
