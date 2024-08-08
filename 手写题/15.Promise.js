@@ -1,5 +1,38 @@
 class MyPromise {
-    constructor(params) {}
+    constructor(fun) {
+        this.status = 'pending';
+        this.value = null;
+        this.reason = null;
+
+        resolveCallbacks = [];
+        rejectedCallbacks = [];
+
+        const resolveHandler = (value) => {
+            if (this.status === 'pending') {
+                this.status = 'fullfilled';
+                this.value = value;
+                resolveCallbacks.forEach((fn) => {
+                    return fn(this.value);
+                });
+            }
+        };
+
+        const rejecthandler = (reason) => {
+            if (this.status === 'pending') {
+                this.status = 'rejected';
+                this.reason = reason;
+                rejectedCallbacks.forEach((fn) => {
+                    return fn(this.reason);
+                });
+            }
+        };
+
+        try {
+            fun(resolveHandler, rejecthandler);
+        } catch (error) {
+            rejecthandler(error);
+        }
+    }
 
     static all(promiseList) {
         return new MyPromise((resolve, reject) => {

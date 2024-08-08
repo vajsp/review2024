@@ -9,7 +9,7 @@ class MyPromise {
     constructor(fun) {
         const resolveHandler = (value) => {
             if (this.state === 'pending') {
-                this.state = 'rejected';
+                this.state = 'fullfilled';
                 this.value = value;
                 this.resolveCallbacks.forEach((fn) => fn(this.value));
             }
