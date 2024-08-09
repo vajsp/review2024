@@ -1,141 +1,64 @@
-class MyPromise {
-    state = 'pending'; // 状态，pending fulfilled rejected
-    value = undefined;
-    reason = undefined;
+function shallowCopy(obj) {
+    if (typeof obj !== 'object' || obj === 'null') {
+        return obj;
+    }
 
-    resolveCallbacks = []; // pending状态下，储存成功的回调
-    rejectCallbacks = []; //  pending状态下，失败的回调
+    let newObj = Array.isArray(obj) ? [] : {};
 
-    constructor(fun) {
-        const resolveHandler = (value) => {
-            if (this.state === 'pending') {
-                this.state = 'fullfilled';
-                this.value = value;
-                this.resolveCallbacks.forEach((fn) => fn(this.value));
-            }
-        };
-
-        const rejectHandler = (reason) => {
-            if (this.state === 'pending') {
-                this.state = 'rejected';
-                this.reason = reason;
-                this.rejectCallbacks.forEach((fn) => fn(this.reason));
-            }
-        };
-
-        try {
-            fun(resolveHandler, rejectHandler);
-        } catch (error) {
-            rejectHandler(error);
+    for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            const element = object[key];
+            newObj[key] = element;
         }
     }
 
-    then(fn1, fn2) {
-        fn1 = typeof fn1 === 'function' ? fn1 : (v) => v;
-        fn2 = typeof fn2 === 'function' ? fn2 : (e) => e;
+    return newObj;
+}
 
-        if (this.state === 'pending') {
-            const p1 = new MyPromise((resolve, reject) => {
-                this.resolveCallbacks.push(() => {
-                    try {
-                        const newValue = fn1(this.value);
-                        resolve(newValue);
-                    } catch (error) {
-                        reject(error);
-                    }
-                });
-
-                this.rejectCallbacks.push(() => {
-                    try {
-                        const newReason = fn2(this.reason);
-                        reject(newReason);
-                    } catch (error) {
-                        reject(error);
-                    }
-                });
-            });
-
-            return p1;
-        }
-
-        if (this.state === 'fulfilled') {
-            const p1 = new MyPromise((resolve, reject) => {
-                try {
-                    const newValue = fn1(this.value);
-                    resolve(newValue);
-                } catch (error) {
-                    reject(error);
-                }
-            });
-
-            return p1;
-        }
-
-        if (this.state === 'rejected') {
-            const p1 = new MyPromise((resolve, reject) => {
-                try {
-                    const newReason = fn2(this.reason);
-                    reject(newReason);
-                } catch (error) {
-                    reject(error);
-                }
-            });
-
-            return p1;
-        }
+function cloneDeep(obj, map = new WeakMap()) {
+    if (typeof obj !== 'object' || obj === nul) {
+        return obj;
     }
 
-    catch(fn) {
-        return this.then(null, fn);
+    const objFromMap = map.get(obj);
+    if (objFromMap) {
+        return objFromMap;
     }
 
-    static resolve(value) {
-        return new MyPromise((resolve, reject) => resolve(value));
-    }
+    let target = {};
+    map.set(obj, target);
 
-    static reject(reason) {
-        return new MyPromise((resolve, reject) => reject(reason));
-    }
-
-    static all(promiseList = []) {
-        const p1 = new MyPromise((resolve, reject) => {
-            const length = promiseList.length;
-            const result = []; //储存promiseList 所有结果
-            let resolvedCount = 0;
-
-            promiseList.forEach((p) => {
-                p.then((data) => {
-                    result.push(data);
-                    // resolvedCount 必须在then里面做++
-
-                    resolvedCount++;
-                    if (resolvedCount === length) {
-                        resolve(result);
-                    }
-                }).catch((err) => {
-                    reject(err);
-                });
-            });
+    if (obj instanceof Map) {
+        target = new Map();
+        obj.forEach((v, k) => {
+            const v1 = cloneDeep(v, map);
+            const k1 = cloneDeep(k, map);
+            target.set(k1, v1);
         });
-
-        return p1;
     }
 
-    static race(promiseList = []) {
-        let resolved = false;
-        const p1 = new MyPromise((resolve, reject) => {
-            promiseList.forEach((p) => {
-                p.then((data) => {
-                    if (!resolved) {
-                        resolve(data);
-                        resolved = true;
-                    }
-                }).catch((err) => {
-                    reject(err);
-                });
-            });
+    if (obj instanceof Set) {
+        target = new Set();
+        obj.forEach((v) => {
+            const v1 = cloneDeep(v, map);
+            target.add(v1);
         });
-
-        return p1;
     }
+
+    if (obj instanceof Array) {
+        target = [];
+        obj.forEach((value) => {
+            target.push(cloneDeep(value));
+        });
+    }
+
+    for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            const element = object[key];
+            const val = cloneDeep(element, map);
+            target[key] = val;
+        }
+    }
+
+    return target;
 }

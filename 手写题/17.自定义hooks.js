@@ -17,4 +17,6 @@ function useGetPoint() {
             document.removeEventListener('click', fn);
         };
     }, []);
+
+    return { X, Y };
 }

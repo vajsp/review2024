@@ -56,7 +56,7 @@ function cloneDeep(obj, map = new WeakMap()) {
         target = new Map();
         obj.forEach((v, k) => {
             const v1 = cloneDeep(v, map);
-            const v2 = cloneDeep(k, map);
+            const k1 = cloneDeep(k, map);
             target.set(k1, v1);
         });
     }
